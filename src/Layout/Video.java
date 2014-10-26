@@ -16,7 +16,7 @@ import org.opencv.highgui.VideoCapture;
 /**
  * Contém as configuracoes de vídeo, escolhidas pelo usuário
  */
-public class Video extends JFrame1 {
+public class Video{
 
     /**
      * Arquivo de vídeo que está sendo processado pelo programa
@@ -38,14 +38,14 @@ public class Video extends JFrame1 {
         File novoVideo = fileChooser.getSelectedFile();
         if (filterAvi.accept(novoVideo)) {
             videoAtual = novoVideo.getPath();
-            exibirMensagemSaida("Novo video: " + videoAtual);
+            TelaPrincipal.exibirMensagemSaida("Novo video: " + videoAtual);
 
             Mat img = new Mat();
             VideoCapture capture = new VideoCapture();
             capture.open(videoAtual);
             capture.read(img);
             
-            exibirImagemTelaPrincipal(img);
+            TelaPrincipal.exibirImagemTelaPrincipal(img);
             
 
         } else {

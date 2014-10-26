@@ -5,7 +5,7 @@
  */
 package main;
 
-import Layout.JFrame1;
+import Layout.TelaPrincipal;
 import javax.swing.WindowConstants;
 import org.opencv.core.Core;
 
@@ -21,7 +21,7 @@ public class ReguaEsperta {
     public static void main(String[] args) {
         
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        JFrame1 frame = new JFrame1();
+        TelaPrincipal frame = new TelaPrincipal();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setVisible(true);
