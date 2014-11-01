@@ -44,8 +44,9 @@ public class Video{
             VideoCapture capture = new VideoCapture();
             capture.open(videoAtual);
             capture.read(img);
-            
-            TelaPrincipal.exibirImagemTelaPrincipal(img);
+          
+            TelaPrincipal.exibirImagemTelaPrincipal(img,videoAtual.substring(videoAtual.lastIndexOf("\\")+1,
+                    videoAtual.indexOf("."))+".jpg");
             
 
         } else {

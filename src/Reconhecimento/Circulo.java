@@ -32,7 +32,10 @@ import static org.opencv.imgproc.Imgproc.THRESH_BINARY_INV;
  */
 public class Circulo {
 
-    public static void segmentarCirculo(int minRaio, int maxRaio) {
+    public static char ind = (char) 96;
+    
+    public static void segmentarCirculo(int minRaio, int maxRaio, int minThreshold, 
+            int maxThreshold, int medianBlurKernel) {
 
         class threadSegmentar extends Thread {
             
@@ -43,11 +46,16 @@ public class Circulo {
             @Override
             public void run() {
                 int contador = 0;
-                
+
                 File folder = new File("imagens/frames");
+                if (folder.exists() == false) {
+                    folder.mkdir();
+                }
                 for (String file : folder.list()) {
                     new File(folder, file).delete();
                 }
+                
+                ind = (char) ((int)ind + 1);
 
                 JFrame frame = new JFrame();
                 JLabel label = new JLabel();
@@ -100,11 +108,11 @@ public class Circulo {
                     // passar a imagem para tons de cinza
                     Imgproc.cvtColor(img, grayImg, Imgproc.COLOR_BGR2GRAY);
 
-                    Imgproc.threshold(grayImg, grayImg, 190, 255, THRESH_BINARY_INV);
+                    Imgproc.threshold(grayImg, grayImg, minThreshold, maxThreshold, THRESH_BINARY_INV);
 
                     Core.bitwise_not(grayImg, grayImg);
 
-                    Imgproc.medianBlur(grayImg, grayImg, 5);
+                    Imgproc.medianBlur(grayImg, grayImg, medianBlurKernel);
 
                     Imgproc.Canny(grayImg, grayImg, 100, 255);
 
@@ -138,9 +146,9 @@ public class Circulo {
                     }
 
                     Imgproc.resize(img, gravar, new Size(640, 480));
-                    Highgui.imwrite("imagens/frames/houghcircles" + contador + ".jpg", gravar);
+                    Highgui.imwrite("imagens/frames/houghcircles" + contador + ind + ".jpg", gravar);
 
-                    label.setIcon(new ImageIcon("imagens/frames/houghcircles" + contador + ".jpg"));
+                    label.setIcon(new ImageIcon("imagens/frames/houghcircles" + contador + ind +  ".jpg"));
 
                     contador++;
 
