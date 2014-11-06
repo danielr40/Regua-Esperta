@@ -177,7 +177,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        Regua.segmentarRegua(10, 2, 10);
+        TelaSegmentarRegua newframe = new TelaSegmentarRegua();
+        newframe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        newframe.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
