@@ -17,7 +17,7 @@ import javax.swing.JPanel;
   
 public class LocalizarReguaPanel extends JPanel implements MouseListener, MouseMotionListener {  
  
-    //String imagem = Video.getImagem(640,360);
+    public String imagem = Video.getImagem(640,360);
     
     public LocalizarReguaPanel(){;
 //Construtor  
@@ -62,10 +62,8 @@ public class LocalizarReguaPanel extends JPanel implements MouseListener, MouseM
         Graphics2D g2 = (Graphics2D) g; 
         g.clearRect(0, 0, this.getWidth(),this.getHeight());//Limpa o frame, pra num ficar uma forma por cima da outra....  
         Shape r = makeRectangle(x0,y0,xf,yf);
-        /*
         Image img1 = Toolkit.getDefaultToolkit().getImage(imagem);
         g2.drawImage(img1, 0, 0, this);
-                */
         g2.draw(r);  
     }  
     

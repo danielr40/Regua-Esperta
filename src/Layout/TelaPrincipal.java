@@ -207,6 +207,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
             file.delete();
         }
         
+        Video.getImagem(1280,720);
+        
         Highgui.imwrite(imgStr, img);
         
         ImageIcon image = new ImageIcon(imgStr);
