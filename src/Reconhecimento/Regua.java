@@ -6,19 +6,23 @@
 package Reconhecimento;
 
 import Layout.TelaSegmentarRegua;
+import Layout.TelaSegmentarRegua2;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.WindowConstants;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 import static org.opencv.imgproc.Imgproc.THRESH_BINARY_INV;
 /**
- *
+ * 
  */
 public class Regua {
     
@@ -27,6 +31,9 @@ public class Regua {
 
     public static void segmentarRegua() {
         
+        long tempoInicio = System.currentTimeMillis();
+        
+        // coordenadas do retangulo de selecao 
         int x0 = TelaSegmentarRegua.localizarReguaPanel1.x0;
         int y0 = TelaSegmentarRegua.localizarReguaPanel1.y0;
         int x = TelaSegmentarRegua.localizarReguaPanel1.xf;
@@ -47,16 +54,19 @@ public class Regua {
         }
         
         Mat bigImage = Highgui.imread(TelaSegmentarRegua.localizarReguaPanel1.imagem);
+        // cortar imagem de acordo com a selecao
         Mat img = new Mat(bigImage,new Rect(x0,y0,x-x0,y-y0));
         
         Mat grayImg = new Mat();
+        // passar imagem para tons de cinza
         Imgproc.cvtColor(img, grayImg, Imgproc.COLOR_BGR2GRAY);
-        //Imgproc.medianBlur(grayImg, grayImg, 3);
+        // limiarizacao 
         Imgproc.threshold(grayImg, grayImg, 190, 255, THRESH_BINARY_INV);
         Core.bitwise_not(grayImg, grayImg);
         
         List <Point> pontos = new ArrayList<Point>(); 
         
+        // adicionar todos os pontos da referentes a regua em um vetor
         for(int i = 0; i<grayImg.rows(); i++)
         {
             for(int j = 0; j<grayImg.cols();j++)
@@ -69,9 +79,16 @@ public class Regua {
             }
         }
         
+        String filename = "imagens/regua_segmentada" + Math.random()*1000 + ".jpg";
+        
+        Mat img2 = new Mat();
+        Imgproc.resize(img, img2, new Size (img.size().width*3.0,img.size().height*3.0));
+        Highgui.imwrite(filename,img2);
+        
         int xMin = 5000, yMin = 5000; 
         int xMax = 0, yMax = 0;
     
+        // pontos extremos da regua
         for (Point ponto : pontos) {
             if (ponto.x > xMax) {
                 xMax = (int) ponto.x;
@@ -87,6 +104,7 @@ public class Regua {
             }
         }
         
+        // regua na posicao horizontal
         if(xMax - xMin > yMax - yMin)
         {
             /*
@@ -95,14 +113,24 @@ public class Regua {
             */
             larguraPixels = (xMax - xMin)*2; 
         }
+        // regua na posicao vertical
         else 
         {
             larguraPixels = (yMax - yMin)*2; 
         }
         
+        long tempoFim = System.currentTimeMillis() - tempoInicio;
+
         centimetrosPorPixel = 30.0/larguraPixels;
         
-        System.out.println(larguraPixels + " pixels");
-        System.out.println(centimetrosPorPixel);
+        TelaSegmentarRegua2 telaResposta = new TelaSegmentarRegua2();
+        telaResposta.jLabel1.setIcon(new ImageIcon(filename));
+        telaResposta.jLabel4.setText(larguraPixels + " pixels");
+        telaResposta.jLabel5.setText(String.valueOf(centimetrosPorPixel).substring(0, 5));
+        telaResposta.jLabel7.setText(tempoFim + " ms");
+        telaResposta.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        telaResposta.setLocation(200, 200);
+        telaResposta.setVisible(true);
+        
     }
 }

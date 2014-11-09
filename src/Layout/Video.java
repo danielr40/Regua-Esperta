@@ -25,6 +25,8 @@ public class Video{
      * Arquivo de vídeo que está sendo processado pelo programa
      */
     public static String videoAtual;
+    
+    public static String nomeVideo;
 
     /**
      * Seleciona novo arquivo de vídeo para ser processado
@@ -48,8 +50,10 @@ public class Video{
             capture.open(videoAtual);
             capture.read(img);
           
-            TelaPrincipal.exibirImagemTelaPrincipal(img,videoAtual.substring(videoAtual.lastIndexOf("\\")+1,
-                    videoAtual.indexOf("."))+".jpg");
+            nomeVideo = videoAtual.substring(videoAtual.lastIndexOf("\\")+1,
+                    videoAtual.indexOf("."));
+            
+            TelaPrincipal.exibirImagemTelaPrincipal(img,nomeVideo +".jpg");
             
 
         } else {
@@ -74,8 +78,7 @@ public class Video{
             cap.read(img);
 
             Imgproc.resize(img, img, new Size(x, y));
-            String filename = "imagens/" + videoAtual.substring(videoAtual.lastIndexOf("\\")+1,
-                        videoAtual.indexOf("."))+ x + "x" + y + ".jpg";
+            String filename = "imagens/" + nomeVideo + x + "x" + y + ".jpg";
 
             Highgui.imwrite(filename, img);
             return filename; 

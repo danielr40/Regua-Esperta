@@ -5,14 +5,10 @@
  */
 package Reconhecimento;
 
-import Layout.TelaPrincipal;
 import Layout.Video;
-import Layout.TelaSegmentarCirculo;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,6 +30,9 @@ public class Circulo {
 
     public static char ind = (char) 96;
     
+    /**
+    segmenta o circulo para acompanhamento do movimento 
+    **/
     public static void segmentarCirculo(int minRaio, int maxRaio, int minThreshold, 
             int maxThreshold, int medianBlurKernel) {
 
@@ -62,6 +61,7 @@ public class Circulo {
                 frame.add(label);
                 frame.setBounds(10, 10, 640, 480);
                 label.setSize(640, 480);
+                frame.setLocation(250,250);
                 frame.setVisible(true);
                 closed = false; 
                 
@@ -108,15 +108,16 @@ public class Circulo {
                     // passar a imagem para tons de cinza
                     Imgproc.cvtColor(img, grayImg, Imgproc.COLOR_BGR2GRAY);
 
+                    // limiarizacao
                     Imgproc.threshold(grayImg, grayImg, minThreshold, maxThreshold, THRESH_BINARY_INV);
 
                     Core.bitwise_not(grayImg, grayImg);
 
+                    // filtro da mediana
                     Imgproc.medianBlur(grayImg, grayImg, medianBlurKernel);
 
+                    // deteccao de vertices
                     Imgproc.Canny(grayImg, grayImg, 100, 255);
-
-                    Highgui.imwrite("imagens/threshold_inv.jpg", grayImg);
 
                     // aplicar transformada circular de hough
                     Imgproc.HoughCircles(grayImg, circles, Imgproc.CV_HOUGH_GRADIENT, 1, 100,
@@ -129,7 +130,7 @@ public class Circulo {
                             center = new Point(Math.round(vCircle[0]), Math.round(vCircle[1]));
                             radius = (int) Math.round(vCircle[2]);
 
-                            // draw the circle outline
+                            // analisa a distancia entre o circulo do frame anterior e atual
                             if(((center.x <= CentroX) || (center.x - CentroX <= 5)) && 
                                     (Math.sqrt(CentroX*CentroX + CentroY*CentroY) - 
                                     Math.sqrt(center.x*center.x + center.y*center.y)<=70.0)
